@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as seedWords from "../seedWords.js";
 import type * as words from "../words.js";
 
 import type {
@@ -17,6 +18,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  seedWords: typeof seedWords;
   words: typeof words;
 }>;
 

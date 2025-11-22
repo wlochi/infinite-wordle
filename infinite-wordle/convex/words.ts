@@ -1,17 +1,19 @@
 import { query } from "./_generated/server";
-import {v} from "convex/values";
 
-export const get = query({
+export const getWord = query({
     args: {},
     handler: async (ctx) => {
-        return await ctx.db.query("words").collect();
+        const randNum = Math.random();
+        let word = await ctx.db.query("words")
+            .withIndex('by_randNum', (q) => q.gte('randNum', randNum))
+            .first();
+
+        if (!word) {
+            word = await ctx.db.query("words")
+                .withIndex('by_randNum', (q) => q.gte("randNum", 0))
+                .first();
+        }
+        return word;
     },
 });
 
-export const getWord = query({
-    args: {number: v.number()},
-    handler: async (ctx) => {
-        return (await ctx.db.query("words").filter(q => !q.field("played")).take(1).
-        collect()).length;
-    },
-})
